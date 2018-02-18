@@ -1,0 +1,95 @@
+version: 1.0.{build}
+configuration: Release
+environment:
+  GitHubOrganisation: MRCollective
+  GitHubUsername: MRCollectiveCI
+  GitHubPassword:
+    secure: hsqKWPKmkjGFHzmoS91a9Q==
+services: mssql2008r2sp2
+before_build:
+- ps: >-
+    nuget restore
+
+    choco install -y GitReleaseNotes.Portable GitReleaseManager.Portable
+
+
+    GitVersion /output buildserver /updateassemblyinfo
+
+    [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | Out-Null
+
+
+    [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement") | Out-Null
+
+
+    $serverName = $env:COMPUTERNAME
+
+    $instanceName = 'SQL2008R2SP2'
+
+    $smo = 'Microsoft.SqlServer.Management.Smo.'
+
+    $wmi = new-object ($smo + 'Wmi.ManagedComputer')
+
+
+    # Enable TCP/IP
+
+    $uri = "ManagedComputer[@Name='$serverName']/ServerInstance[@Name='$instanceName']/ServerProtocol[@Name='Tcp']"
+
+    $Tcp = $wmi.GetSmoObject($uri)
+
+    $Tcp.IsEnabled = $true
+
+    $TCP.alter()
+
+
+    # Enable named pipes
+
+    $uri = "ManagedComputer[@Name='$serverName']/ ServerInstance[@Name='$instanceName']/ServerProtocol[@Name='Np']"
+
+    $Np = $wmi.GetSmoObject($uri)
+
+    $Np.IsEnabled = $true
+
+    $Np.Alter()
+
+
+    Set-Service SQLBrowser -StartupType Manual
+
+    Start-Service SQLBrowser
+
+    Start-Service "MSSQL`$$instanceName"
+build:
+  parallel: true
+  verbosity: minimal
+after_build:
+- ps: >-
+    Get-ChildItem -Recurse *.nuspec | foreach { nuget pack $_.FullName -Properties "Configuration=Release;Platform=AnyCPU" -Symbols -Version $Env:GitVersion_NuGetVersion }
+
+
+    $currentTag = git tag -l --points-at HEAD
+
+    if($currentTag) {
+        $env:SHOULD_DEPLOY = 'true'
+    }
+artifacts:
+- path: '*.nupkg'
+- path: ReleaseNotes.md
+deploy:
+- provider: NuGet
+  api_key:
+    secure: PUn5bO0imZIO/nDzc1HnL4Xs4wKDUjqWfhNb38QL9ETn+uZ+ciBhHKIqIUFNK85t
+  on:
+    SHOULD_DEPLOY: true
+after_deploy:
+- cmd: >-
+    GitReleaseNotes.exe . /OutputFile ReleaseNotes.md
+
+
+    GitReleaseManager.exe create -i ReleaseNotes.md -o %GitHubOrganisation% -u %GitHubUsername% -p %GitHubPassword% -r %APPVEYOR_PROJECT_NAME% -c master -n %GitVersion_NuGetVersion%
+
+
+    GitReleaseManager.exe publish -t %GitVersion_NuGetVersion% -o %GitHubOrganisation% -u %GitHubUsername% -p %GitHubPassword% -r %APPVEYOR_PROJECT_NAME%
+notifications:
+- provider: GitHubPullRequest
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: false

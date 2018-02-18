@@ -18,7 +18,7 @@ before_build:
     
     choco install -y --no-progress aspnetmvc #ChameleonForms (MVC3)
 
-    choco install -y --no-progress tortoisegit #TortoiseGitToolbar
+    choco install -y --no-progress git.install tortoisegit #TortoiseGitToolbar
 
     GitVersion /output buildserver /updateassemblyinfo
 

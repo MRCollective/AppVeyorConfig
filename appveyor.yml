@@ -11,7 +11,9 @@ before_build:
     nuget restore
 
     choco install -y --no-progress GitReleaseNotes.Portable GitReleaseManager.Portable
+    
     choco install -y aspnetmvc #ChameleonForms (MVC3)
+
     choco install -y visualstudio2015community #TortoiseGitToolbar (installs VS SDK)
 
     GitVersion /output buildserver /updateassemblyinfo

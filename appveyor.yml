@@ -14,7 +14,8 @@ before_build:
     
     choco install -y aspnetmvc #ChameleonForms (MVC3)
 
-    choco install -y visualstudio2015community /Features:VS_SDK_GroupV5 #TortoiseGitToolbar (installs VS SDK)
+    Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?LinkId=532606&clcid=0x409" -OutFile vs_community.exe
+    .\vs_community.exe modify --installPath "C:\Program Files (x86)\Microsoft Visual Studio\2015\Community" --passive --norestart --add Microsoft.VisualStudio.Workload.VisualStudioExtension
 
     GitVersion /output buildserver /updateassemblyinfo
 

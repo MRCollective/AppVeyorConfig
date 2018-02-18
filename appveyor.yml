@@ -95,7 +95,6 @@ after_deploy:
 - cmd: >-
     GitReleaseManager.exe create -i ReleaseNotes.md -o %GitHubOrganisation% -u %GitHubUsername% -p %GitHubPassword% -r %APPVEYOR_PROJECT_NAME% -c master -n %GitVersion_NuGetVersion%
 
-
     GitReleaseManager.exe publish -t %GitVersion_NuGetVersion% -o %GitHubOrganisation% -u %GitHubUsername% -p %GitHubPassword% -r %APPVEYOR_PROJECT_NAME%
 notifications:
 - provider: GitHubPullRequest

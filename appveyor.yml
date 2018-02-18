@@ -16,10 +16,6 @@ before_build:
     
     choco install -y aspnetmvc #ChameleonForms (MVC3)
 
-    Invoke-WebRequest -Uri "https://aka.ms/vs/15/release/vs_community.exe" -OutFile vs_community.exe
-    
-    Start-Process -FilePath .\vs_community.exe -ArgumentList 'modify','--passive','--norestart','--add Microsoft.VisualStudio.Workload.VisualStudioExtension' -Wait
-
     GitVersion /output buildserver /updateassemblyinfo
 
     [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | Out-Null

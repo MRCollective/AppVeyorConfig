@@ -7,7 +7,7 @@ environment:
   GitHubUsername: MRCollectiveCI
   GitHubPassword:
     secure: hsqKWPKmkjGFHzmoS91a9Q==
-services: mssql2008r2sp2
+services: mssql2014
 before_build:
 - ps: >-
     nuget restore
@@ -30,7 +30,7 @@ before_build:
 
     $serverName = $env:COMPUTERNAME
 
-    $instanceName = 'SQL2008R2SP2'
+    $instanceName = 'SQL2014'
 
     $smo = 'Microsoft.SqlServer.Management.Smo.'
 

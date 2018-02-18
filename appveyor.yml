@@ -10,7 +10,7 @@ before_build:
 - ps: >-
     nuget restore
 
-    choco install -y --no-progress GitReleaseNotes.Portable GitReleaseManager.Portable aspnetmvc
+    choco install -y --no-progress GitReleaseNotes.Portable GitReleaseManager.Portable aspnetmvc VS2015SDK
 
 
     GitVersion /output buildserver /updateassemblyinfo

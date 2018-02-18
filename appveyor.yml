@@ -70,6 +70,9 @@ after_build:
     if($currentTag) {
         $env:SHOULD_DEPLOY = 'true'
     }
+
+    GitReleaseNotes.exe . /OutputFile ReleaseNotes.md
+
 artifacts:
 - path: '*.nupkg'
 - path: ReleaseNotes.md
@@ -81,9 +84,6 @@ deploy:
     SHOULD_DEPLOY: true
 after_deploy:
 - cmd: >-
-    GitReleaseNotes.exe . /OutputFile ReleaseNotes.md
-
-
     GitReleaseManager.exe create -i ReleaseNotes.md -o %GitHubOrganisation% -u %GitHubUsername% -p %GitHubPassword% -r %APPVEYOR_PROJECT_NAME% -c master -n %GitVersion_NuGetVersion%
 
 

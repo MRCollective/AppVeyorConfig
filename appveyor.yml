@@ -74,6 +74,10 @@ after_build:
 
     GitReleaseNotes.exe . /OutputFile ReleaseNotes.md
 
+    Write-Output "The following would become the GitHub release notes if this package is released:"
+
+    Get-Content .\ReleaseNotes.md
+
 artifacts:
 - path: '*.nupkg'
 - path: ReleaseNotes.md

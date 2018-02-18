@@ -64,10 +64,11 @@ after_build:
 - ps: >-
     Get-ChildItem -Recurse *.nuspec | foreach { nuget pack $_.FullName -Properties "Configuration=Release;Platform=AnyCPU" -Symbols -Version $Env:GitVersion_NuGetVersion }
 
-
     $currentTag = git tag -l --points-at HEAD
 
-    if($currentTag) {
+    $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME/releases/tags/$Env:GitVersion_NuGetVersion"
+
+    if($currentTag -And !$releaseInfo.id) {
         $env:SHOULD_DEPLOY = 'true'
     }
 

@@ -7,7 +7,11 @@ environment:
   GitHubUsername: MRCollectiveCI
   GitHubPassword:
     secure: hsqKWPKmkjGFHzmoS91a9Q==
+  APPVEYOR_RDP_PASSWORD:
+    secure: ApgGEIUUYF2Lb/YDAgGZpw==
 services: mssql2014
+init:
+- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 before_build:
 - ps: >-
     nuget restore

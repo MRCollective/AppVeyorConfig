@@ -16,9 +16,9 @@ before_build:
 
     choco install -y --no-progress GitReleaseNotes.Portable GitReleaseManager.Portable
     
-    choco install -y aspnetmvc #ChameleonForms (MVC3)
+    choco install -y --no-progress aspnetmvc #ChameleonForms (MVC3)
 
-    choco install -y tortoisegit #TortoiseGitToolbar
+    choco install -y --no-progress tortoisegit #TortoiseGitToolbar
 
     GitVersion /output buildserver /updateassemblyinfo
 

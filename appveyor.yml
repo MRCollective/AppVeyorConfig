@@ -18,6 +18,8 @@ before_build:
     
     choco install -y aspnetmvc #ChameleonForms (MVC3)
 
+    choco install -y tortoisegit #TortoiseGitToolbar
+
     GitVersion /output buildserver /updateassemblyinfo
 
     [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | Out-Null

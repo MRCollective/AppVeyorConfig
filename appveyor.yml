@@ -88,7 +88,7 @@ after_build:
 test:
   assemblies:
     only:
-      - '**\*.Tests.dll'
+      - '**\*.*Tests.dll'
 artifacts:
 - path: '*.nupkg'
 - path: ReleaseNotes.md

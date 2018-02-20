@@ -16,10 +16,21 @@ before_build:
 
     choco install -y --no-progress git.install GitReleaseNotes.Portable GitReleaseManager.Portable
     
-    choco install -y --no-progress aspnetmvc #ChameleonForms (MVC3)
+    if ($env:APPVEYOR_PROJECT_NAME -eq "ChameleonForms") {
 
-    choco install -y --no-progress tortoisegit #TortoiseGitToolbar
-    . "C:\Program Files\TortoiseGit\bin\TortoiseGitProc.exe" #Registry key for sh.exe isn't created until this runs once (causing a failing test)
+      choco install -y --no-progress aspnetmvc
+
+    }
+
+    if ($env:APPVEYOR_PROJECT_NAME -eq "TortoiseGitToolbar") {
+
+      choco install -y --no-progress tortoisegit
+    
+      #Registry key for sh.exe isn't created until this runs once (causing a failing test)
+
+      . "C:\Program Files\TortoiseGit\bin\TortoiseGitProc.exe"
+
+    }
 
     GitVersion /output buildserver /updateassemblyinfo
 
@@ -68,16 +79,23 @@ before_build:
 
     Write-Output "Waiting for all active installations to finish..."
 
-    do {
-   
-      $msitest = Get-Process -ProcessName msiexec -ErrorAction SilentlyContinue
-      if ($msitest) {
-        Start-Sleep -Seconds 15
-      }
-   
-    }
+    if ($env:APPVEYOR_PROJECT_NAME -eq "TortoiseGitToolbar") {
 
-    until (!$msitest)
+      do {
+    
+        $msitest = Get-Process -ProcessName msiexec -ErrorAction SilentlyContinue
+
+        if ($msitest) {
+
+          Start-Sleep -Seconds 60
+
+        }
+    
+      }
+
+      until (!$msitest)
+
+    }
 
     Write-Output "Verified all installations have finished."
 build:
@@ -138,4 +156,4 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

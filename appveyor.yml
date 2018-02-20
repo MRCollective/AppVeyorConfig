@@ -99,6 +99,9 @@ after_build:
     Write-Output "The following would become the GitHub release notes if this package is released:"
 
     Get-Content .\ReleaseNotes.md
+
+    # Initial config of VS so that UI tests can run
+    Start-Process -Wait "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" -ArgumentList "/resetsettings","""C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\Profiles\General.vssettings""","/command","File.Exit"
 test:
   assemblies:
     only:
@@ -123,4 +126,4 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 on_finish:
-#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

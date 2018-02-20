@@ -19,6 +19,7 @@ before_build:
     choco install -y --no-progress aspnetmvc #ChameleonForms (MVC3)
 
     choco install -y --no-progress tortoisegit #TortoiseGitToolbar
+    . "C:\Program Files\TortoiseGit\bin\TortoiseGitProc.exe" #Registry key for sh.exe isn't created until this runs once (causing a failing test)
 
     GitVersion /output buildserver /updateassemblyinfo
 

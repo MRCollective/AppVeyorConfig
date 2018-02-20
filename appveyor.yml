@@ -14,11 +14,11 @@ before_build:
 - ps: >-
     nuget restore
 
-    choco install -y --no-progress GitReleaseNotes.Portable GitReleaseManager.Portable
+    choco install -y --no-progress git.install GitReleaseNotes.Portable GitReleaseManager.Portable
     
     choco install -y --no-progress aspnetmvc #ChameleonForms (MVC3)
 
-    choco install -y --no-progress git.install tortoisegit #TortoiseGitToolbar
+    choco install -y --no-progress tortoisegit #TortoiseGitToolbar
 
     GitVersion /output buildserver /updateassemblyinfo
 
@@ -122,4 +122,4 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

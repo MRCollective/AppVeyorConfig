@@ -75,12 +75,22 @@ after_build:
 
     $HTTP_Request = [System.Net.WebRequest]::Create("https://api.github.com/repos/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME/releases/tags/$Env:GitVersion_NuGetVersion")
 
-    $HTTP_Response = $HTTP_Request.GetResponse()
+    $HTTP_Request.UserAgent = "Powershell"
 
-    $HTTP_Status = [int]$HTTP_Response.StatusCode
+    try {
 
-    if ($currentTag -And $HTTP_Status -eq 404) {
-        $env:SHOULD_DEPLOY = 'true'
+      $HTTP_Request.GetResponse()
+
+    } catch [Net.WebException] { 
+
+        [System.Net.HttpWebResponse] $resp = [System.Net.HttpWebResponse] $_.Exception.Response  
+
+        if ($currentTag -And $resp.StatusCode -eq 404) {
+
+          $env:SHOULD_DEPLOY = 'true'
+
+        }
+
     }
 
     GitReleaseNotes.exe . /OutputFile ReleaseNotes.md
@@ -88,7 +98,6 @@ after_build:
     Write-Output "The following would become the GitHub release notes if this package is released:"
 
     Get-Content .\ReleaseNotes.md
-
 test:
   assemblies:
     only:

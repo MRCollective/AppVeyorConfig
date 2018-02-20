@@ -85,6 +85,10 @@ after_build:
 
     Get-Content .\ReleaseNotes.md
 
+test:
+  assemblies:
+    only:
+      - '**\*.Tests.dll'
 artifacts:
 - path: '*.nupkg'
 - path: ReleaseNotes.md

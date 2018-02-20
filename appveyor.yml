@@ -73,9 +73,13 @@ after_build:
 
     $currentTag = git tag -l --points-at HEAD
 
-    $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME/releases/tags/$Env:GitVersion_NuGetVersion" -ErrorAction SilentlyContinue
+    $HTTP_Request = [System.Net.WebRequest]::Create("https://api.github.com/repos/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME/releases/tags/$Env:GitVersion_NuGetVersion")
 
-    if($currentTag -And !$releaseInfo.id) {
+    $HTTP_Response = $HTTP_Request.GetResponse()
+
+    $HTTP_Status = [int]$HTTP_Response.StatusCode
+
+    if ($currentTag -And $HTTP_Status -eq 404) {
         $env:SHOULD_DEPLOY = 'true'
     }
 

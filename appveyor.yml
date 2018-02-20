@@ -65,6 +65,18 @@ before_build:
     Start-Service SQLBrowser
 
     Start-Service "MSSQL`$$instanceName"
+
+    Write-Output "Waiting for all active installations to finish..."
+
+    do {
+   
+      $msitest = Get-Process -ProcessName msiexec -ErrorAction SilentlyContinue
+   
+    }
+
+    until (!$msitest -or $msitest.processname -notcontains "msiexec")
+
+    Write-Output "Verified all installations have finished."
 build:
   parallel: true
   verbosity: minimal
@@ -99,9 +111,6 @@ after_build:
     Write-Output "The following would become the GitHub release notes if this package is released:"
 
     Get-Content .\ReleaseNotes.md
-
-    # Initial config of VS so that UI tests can run
-    Start-Process -Wait "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" -ArgumentList "/resetsettings","""C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\Profiles\General.vssettings""","/command","File.Exit"
 test:
   assemblies:
     only:

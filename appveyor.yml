@@ -71,10 +71,13 @@ before_build:
     do {
    
       $msitest = Get-Process -ProcessName msiexec -ErrorAction SilentlyContinue
+      if ($msitest) {
+        Start-Sleep -Seconds 15
+      }
    
     }
 
-    until (!$msitest -or $msitest.processname -notcontains "msiexec")
+    until (!$msitest)
 
     Write-Output "Verified all installations have finished."
 build:

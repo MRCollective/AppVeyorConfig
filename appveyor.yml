@@ -131,7 +131,15 @@ after_build:
 
     Write-Output "The following would become the GitHub release notes if this package is released:"
 
-    Get-Content .\ReleaseNotes.md
+    If (Test-Path ".\ReleaseNotes.md") {
+
+      Get-Content .\ReleaseNotes.md
+
+    } else {
+
+      Write-Warning "Release notes were not generated."
+
+    }
 test:
   assemblies:
     only:
@@ -156,4 +164,4 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

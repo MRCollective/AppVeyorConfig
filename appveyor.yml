@@ -4,9 +4,8 @@ image:
 - Visual Studio 2017
 environment:
   GitHubOrganisation: MRCollective
-  GitHubUsername: MRCollectiveCI
-  GitHubPassword:
-    secure: hsqKWPKmkjGFHzmoS91a9Q==
+  GitHubToken:
+    secure: YN1artxzsnEhGRmnSbtVUJBX0SugEqj99wS894AEHcsglfJJA185JauudU4ocfAA
 services: mssql2014
 init:
 - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -14,7 +13,9 @@ before_build:
 - ps: >-
     nuget restore
 
-    choco install -y --no-progress git.install GitReleaseNotes.Portable GitReleaseManager.Portable
+    choco install -y --no-progress git.install GitReleaseManager.Portable
+
+    npm install github-release-notes -g
     
     if ($env:APPVEYOR_PROJECT_NAME -eq "ChameleonForms") {
 
@@ -126,27 +127,12 @@ after_build:
         }
 
     }
-
-    GitReleaseNotes.exe . /OutputFile ReleaseNotes.md
-
-    Write-Output "The following would become the GitHub release notes if this package is released:"
-
-    If (Test-Path ".\ReleaseNotes.md") {
-
-      Get-Content .\ReleaseNotes.md
-
-    } else {
-
-      Write-Warning "Release notes were not generated."
-
-    }
 test:
   assemblies:
     only:
       - '**\*.*Tests.dll'
 artifacts:
 - path: '*.nupkg'
-- path: ReleaseNotes.md
 deploy:
 - provider: NuGet
   api_key:
@@ -154,10 +140,8 @@ deploy:
   on:
     SHOULD_DEPLOY: true
 after_deploy:
-- cmd: >-
-    GitReleaseManager.exe create -i ReleaseNotes.md -o %GitHubOrganisation% -u %GitHubUsername% -p %GitHubPassword% -r %APPVEYOR_PROJECT_NAME% -c master -n %GitVersion_NuGetVersion%
-
-    GitReleaseManager.exe publish -t %GitVersion_NuGetVersion% -o %GitHubOrganisation% -u %GitHubUsername% -p %GitHubPassword% -r %APPVEYOR_PROJECT_NAME%
+- ps: >-
+    gren release --token=$env:GitHubToken
 notifications:
 - provider: GitHubPullRequest
   on_build_success: true

@@ -78,9 +78,9 @@ before_build:
 
     Start-Service "MSSQL`$$instanceName"
 
-    Write-Output "Waiting for all active installations to finish..."
-
     if ($env:APPVEYOR_PROJECT_NAME -eq "TortoiseGitToolbar") {
+
+      Write-Output "Waiting for all active installations to finish..."
 
       do {
     
@@ -96,9 +96,16 @@ before_build:
 
       until (!$msitest)
 
+      Write-Output "Verified all installations have finished."
+
     }
 
-    Write-Output "Verified all installations have finished."
+    If (Test-Path ".\PreBuild.ps1") {
+
+      & ".\PreBuild.ps1"
+
+    }
+
 build:
   parallel: true
   verbosity: minimal

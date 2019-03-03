@@ -140,6 +140,7 @@ test:
       - '**\*.*Tests.dll'
 artifacts:
 - path: '*.nupkg'
+- path: '**\*.vsix'
 deploy:
 - provider: NuGet
   api_key:

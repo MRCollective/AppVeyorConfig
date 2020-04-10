@@ -6,7 +6,7 @@ environment:
   GitHubOrganisation: MRCollective
   GitHubToken:
     secure: YN1artxzsnEhGRmnSbtVUJBX0SugEqj99wS894AEHcsglfJJA185JauudU4ocfAA
-services: mssql2014
+services: mssql2019
 init:
 - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 before_build:
@@ -43,7 +43,7 @@ before_build:
 
     $serverName = $env:COMPUTERNAME
 
-    $instanceName = 'SQL2014'
+    $instanceName = 'SQL2019'
 
     $smo = 'Microsoft.SqlServer.Management.Smo.'
 

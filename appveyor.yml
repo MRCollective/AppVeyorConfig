@@ -17,8 +17,13 @@ before_build:
 
     If (Test-Path ".\PreBuild.ps1") {
     
+      Write-Host "Executing PreBuild.ps1"
       & ".\PreBuild.ps1"
       
+    } else {
+    
+    Write-Host "No PreBuild.ps1 bound"
+    
     }
 build:
   parallel: true

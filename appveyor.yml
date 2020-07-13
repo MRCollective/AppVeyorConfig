@@ -7,8 +7,8 @@ environment:
   GitHubToken:
     secure: 56uD+0NAv9a2lH6uupDKkxqQHVsBn/jhAPqI34eX2uNLBUiWMxTpQstbWaKaMPjY
 services: mssql2019
-init:
-- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#init:
+#- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 before_build:
 - ps: >-
     nuget restore

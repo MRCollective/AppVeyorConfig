@@ -10,6 +10,7 @@ services: mssql2019
 cache:
   - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
+  - C:\ProgramData\chocolatey\lib -> appveyor.yml
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 before_build:
@@ -25,7 +26,7 @@ before_build:
       
     } else {
     
-      Write-Host "No PreBuild.ps1 bound"
+      Write-Host "No PreBuild.ps1 found"
     
     }
 build:

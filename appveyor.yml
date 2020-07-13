@@ -9,6 +9,7 @@ environment:
   GitHubToken:
     secure: 56uD+0NAv9a2lH6uupDKkxqQHVsBn/jhAPqI34eX2uNLBUiWMxTpQstbWaKaMPjY
 services: mssql2019
+skip_branch_with_pr: true
 cache:
   - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3

@@ -61,21 +61,25 @@ after_build:
         
     }
     
-    if (Test-Path "docfx.json") {#-And (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)) {
+    if (Test-Path "docfx.json") {
       choco install docfx -y
       & docfx docfx.json
       
-      git clone https://github.com/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME.git -b gh-pages documentation_upload -q
-      Copy-Item documentation_upload/.git _site -recurse
-      cd _site
-      git config user.email $env:GitEmail
-      git config user.name $env:GitName
-      git config core.autocrlf false
-      git config --global credential.helper store
-      Add-Content "$HOME\.git-credentials" "https://$($env:GitHubToken):x-oauth-basic@github.com`n" -NoNewline
-      git add -A 2>&1
-      git commit -m "$Env:GitVersion_NuGetVersion"
-      git push origin gh-pages
+      if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
+        git clone https://github.com/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME.git -b gh-pages documentation_upload -q
+        Copy-Item documentation_upload/.git _site -recurse
+        cd _site
+        git config user.email $env:GitEmail
+        git config user.name $env:GitName
+        git config core.autocrlf false
+        git config --global credential.helper store
+        Add-Content "$HOME\.git-credentials" "https://$($env:GitHubToken):x-oauth-basic@github.com`n" -NoNewline
+        $hasEditsToTrackedFilesOrHasUntrackedFiles = !([string]::IsNullOrEmpty($(git status --porcelain)))
+        Write-Host "hasEditsToTrackedFilesOrHasUntrackedFiles- $hasEditsToTrackedFilesOrHasUntrackedFiles"
+        git add -A 2>&1
+        git commit -m "$Env:GitVersion_NuGetVersion"
+        git push origin gh-pages
+      }
     }
 test:
   assemblies:
@@ -95,7 +99,6 @@ after_deploy:
 - ps: >-
     npm install github-release-notes -g
     gren release --token=$env:GitHubToken
-    git config --global credential.helper store
     
     if (Test-Path ".\_site") {
       # todo: docs deployment

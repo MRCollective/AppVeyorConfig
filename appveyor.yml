@@ -72,7 +72,7 @@ after_build:
       git config user.name $env:GitName
       git config core.autocrlf false
       git config --global credential.helper store
-      Add-Content "$HOME\.git-credentials" "https://$($env:GitHubToken):x-oauth-basic@github.com"
+      Add-Content "$HOME\.git-credentials" "https://$($env:GitHubToken):x-oauth-basic@github.com`n" -NoNewline
       git add -A 2>&1
       git commit -m "$Env:GitVersion_NuGetVersion"
       git push origin gh-pages

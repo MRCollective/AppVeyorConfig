@@ -74,7 +74,8 @@ after_build:
       git config user.email $env:GitEmail
       git config user.name $env:GitName
       git config core.autocrlf false
-      git remote set-url origin https://$($env:access_token):x-oauth-basic@github.com/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME.git
+      git config --global credential.helper store
+      Add-Content "$HOME\.git-credentials" "https://$($env:GitHubToken):x-oauth-basic@github.com`n"
       git add -A 2>&1
       git commit -m "$Env:GitVersion_NuGetVersion"
       git push origin gh-pages
@@ -100,16 +101,7 @@ after_deploy:
     git config --global credential.helper store
     
     if (Test-Path ".\_site") {
-      Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
-      git clone https://github.com/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME.git -b gh-pages documentation_upload -q
-      Copy-Item documentation_upload/.git _site -recurse
-      cd _site
-      git config user.email $env:GitEmail
-      git config user.name $env:GitName
-      git config core.autocrlf false
-      git add -A 2>&1
-      git commit -m "$Env:GitVersion_NuGetVersion"
-      git push origin gh-pages
+      # todo: docs deployment
     }
 notifications:
 - provider: GitHubPullRequest

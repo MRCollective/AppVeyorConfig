@@ -20,16 +20,16 @@ before_build:
 - ps: >-
 
     & git --version
-    
+
     & nuget restore
-    
+
     & GitVersion /output buildserver /updateassemblyinfo
 
     If (Test-Path ".\PreBuild.ps1") {
     
       Write-Host "Executing PreBuild.ps1"
       & ".\PreBuild.ps1"
-      
+    
     } else {
     
       Write-Host "No PreBuild.ps1 found"

@@ -75,10 +75,11 @@ after_build:
         git config --global credential.helper store
         Add-Content "$HOME\.git-credentials" "https://$($env:GitHubToken):x-oauth-basic@github.com`n" -NoNewline
         $hasEditsToTrackedFilesOrHasUntrackedFiles = !([string]::IsNullOrEmpty($(git status --porcelain)))
-        Write-Host "hasEditsToTrackedFilesOrHasUntrackedFiles- $hasEditsToTrackedFilesOrHasUntrackedFiles"
-        git add -A 2>&1
-        git commit -m "$Env:GitVersion_NuGetVersion"
-        git push origin gh-pages
+        if ($hasEditsToTrackedFilesOrHasUntrackedFiles) {
+          git add -A 2>&1
+          git commit -m "$Env:GitVersion_NuGetVersion"
+          git push origin gh-pages
+        }
       }
     }
 test:

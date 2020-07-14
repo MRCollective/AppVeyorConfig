@@ -16,6 +16,8 @@ skip_branch_with_pr: true
 cache:
   - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
+  - C:\ProgramData\chocolatey\lib -> appveyor.yml
+  - C:\ProgramData\chocolatey\bin -> appveyor.yml
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 before_build:

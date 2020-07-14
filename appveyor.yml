@@ -66,14 +66,15 @@ after_build:
       & docfx docfx.json
       
       Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
-      git config --global user.email $env:op_build_user_email
-      git config --global user.name $env:op_build_user
       git clone https://github.com/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME.git -b gh-pages documentation_upload -q
       Copy-Item documentation_upload/.git _site -recurse
-      CD _site
+      cd _site
+      git config user.email $env:GitEmail
+      git config user.name $env:GitName
+      git config core.autocrlf false
       git add -A 2>&1
-      git commit -m "$Env:GitVersion_NuGetVersion" -q
-      git push origin gh-pages -q
+      git commit -m "$Env:GitVersion_NuGetVersion"
+      git push origin gh-pages
     }
 test:
   assemblies:
@@ -95,16 +96,18 @@ after_deploy:
     gren release --token=$env:GitHubToken
     git config --global credential.helper store
     
-    Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
-    git clone https://github.com/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME.git -b gh-pages documentation_upload -q
-    Copy-Item documentation_upload/.git _site -recurse
-    cd _site
-    git config user.email $env:GitEmail
-    git config user.name $env:GitName
-    git config core.autocrlf false
-    git add -A 2>&1
-    git commit -m "$Env:GitVersion_NuGetVersion"
-    git push origin gh-pages
+    if (Test-Path ".\_site") {
+      Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+      git clone https://github.com/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME.git -b gh-pages documentation_upload -q
+      Copy-Item documentation_upload/.git _site -recurse
+      cd _site
+      git config user.email $env:GitEmail
+      git config user.name $env:GitName
+      git config core.autocrlf false
+      git add -A 2>&1
+      git commit -m "$Env:GitVersion_NuGetVersion"
+      git push origin gh-pages
+    }
 notifications:
 - provider: GitHubPullRequest
   on_build_success: true

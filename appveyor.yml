@@ -75,6 +75,7 @@ test:
       - '**\*.*Tests.dll'
 artifacts:
 - path: '*.nupkg'
+- path: '*.snupkg'
 - path: '**\*.vsix'
 - path: _site
 deploy:

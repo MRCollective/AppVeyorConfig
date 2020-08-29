@@ -41,7 +41,7 @@ build:
   verbosity: minimal
 after_build:
 - ps: >-
-    Get-ChildItem -Recurse *.nuspec | foreach { nuget pack $_.FullName -Properties "Configuration=Release;Platform=AnyCPU" -Symbols -Version $Env:GitVersion_NuGetVersion }
+    Get-ChildItem -Recurse *.nuspec | foreach { nuget pack $_.FullName -Properties "Configuration=Release;Platform=AnyCPU" -Symbols -SymbolPackageFormat snupkg -Version $Env:GitVersion_NuGetVersion }
 
     $currentTag = git tag -l --points-at HEAD
 

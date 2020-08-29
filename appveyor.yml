@@ -88,8 +88,9 @@ after_deploy:
 - ps: >-
     npm install github-release-notes -g
 
+    $currentTag = git tag -l --points-at HEAD
 
-    gren release --token=$env:GitHubToken
+    gren release --token=$env:GitHubToken --tags=$currentTag
 
     if (Test-Path ".\_site") {
       git clone https://github.com/$env:GitHubOrganisation/$env:APPVEYOR_PROJECT_NAME.git -b gh-pages documentation_upload -q

@@ -11,6 +11,8 @@ environment:
     secure: 56uD+0NAv9a2lH6uupDKkxqQHVsBn/jhAPqI34eX2uNLBUiWMxTpQstbWaKaMPjY
 services: mssql2019
 branches:
+  only:
+    - master
   except:
     - gh-pages
 skip_branch_with_pr: true

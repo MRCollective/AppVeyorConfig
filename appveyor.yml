@@ -3,6 +3,7 @@ configuration: Release
 image:
 - Visual Studio 2022
 environment:
+  IGNORE_NORMALISATION_GIT_HEAD_MOVE: 1
   GitHubOrganisation: MRCollective
   GitEmail: mrcollective@robdmoore.id.au
   GitName: MRCollective CI

@@ -31,6 +31,7 @@ before_build:
     
       Write-Host "Executing PreBuild.ps1"
       & ".\PreBuild.ps1"
+      $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
     
     } else {
     

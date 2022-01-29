@@ -8,7 +8,7 @@ environment:
   GitEmail: mrcollective@robdmoore.id.au
   GitName: MRCollective CI
   GitHubToken:
-    secure: 56uD+0NAv9a2lH6uupDKkxqQHVsBn/jhAPqI34eX2uNLBUiWMxTpQstbWaKaMPjY
+    secure: 7TOde4ZxLAF5UEnxhnOr8u8KE8z8Fe1UDCnTpsWVX6YntHxBSao6Gi+gjMPccwH2
 services: mssql2019
 branches:
   only:
